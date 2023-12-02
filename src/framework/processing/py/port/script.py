@@ -160,8 +160,8 @@ def render_end_page():
 
 def render_donation_page(body, progress):
     header = props.PropsUIHeader(props.Translatable({
-        "en": "Google activity", 
-        "nl": "Google activity"
+        "en": "Google location", 
+        "nl": "Google locatie"
     }))
 
     footer = props.PropsUIFooter(progress)
@@ -172,8 +172,8 @@ def render_donation_page(body, progress):
 def retry_confirmation():
     text = props.Translatable(
         {
-            "en": f"Unfortunately, we cannot process your file. Continue, if you are sure that you selected the right file. Try again to select a different file.",
-            "nl": f"Helaas, kunnen we uw bestand niet verwerken. Weet u zeker dat u het juiste bestand heeft gekozen? Ga dan verder. Probeer opnieuw als u een ander bestand wilt kiezen.",
+            "en": f"Unfortunately we cannot process your file. Continue, if you are sure that you selected the right file. Try again to select a different file.",
+            "nl": f"Helaas kunnen we uw bestand niet verwerken. Weet u zeker dat u het juiste bestand heeft gekozen? Ga dan verder. Probeer opnieuw als u een ander bestand wilt kiezen.",
         }
     )
     ok = props.Translatable({"en": "Try again", "nl": "Probeer opnieuw"})
@@ -183,8 +183,8 @@ def retry_confirmation():
 def retry_no_data_confirmation():
     text = props.Translatable(
         {
-            "en": f"There does not seem to be location information in your file. Continue, if you are sure that you selected the right file. Try again to select a different file.",
-            "nl": f"Helaas, er lijkt geen lokatie informatie in uw bestand te zitten. Weet u zeker dat u het juiste bestand heeft gekozen? Ga dan verder. Probeer opnieuw als u een ander bestand wilt kiezen.",
+            "en": f"Unfortunately we could not detect any location information in your file. Continue, if you are sure that you selected the right file. Try again to select a different file.",
+            "nl": f"We hebben helaas geen locatie informatie in uw bestand gevonden. Weet u zeker dat u het juiste bestand heeft gekozen? Ga dan verder. Probeer opnieuw als u een ander bestand wilt kiezen.",
         }
     )
     ok = props.Translatable({"en": "Try again", "nl": "Probeer opnieuw"})
@@ -195,8 +195,8 @@ def retry_no_data_confirmation():
 
 def prompt_file():
     description = props.Translatable({
-        "en": f"Please follow the download instructions and choose the file that you stored on your device. Click 'Skip' at the right bottom, if you do not have a file. ",
-        "nl": f"Volg de download instructies en kies het bestand dat u opgeslagen heeft op uw apparaat. Als u geen bestand heeft klik dan op 'Overslaan' rechts onder.",
+        "en": f"Click 'Choose file' to choose the file that you received from Google. If you click 'Continue', the data that is required for research is extracted from your file.",
+        "nl": f"Klik op ‘Kies bestand’ om het bestand dat u ontvangen hebt van Google te kiezen. Als u op 'Verder' klikt worden de gegevens die nodig zijn voor het onderzoek uit uw bestand gehaald.",
     })
 
     return props.PropsUIPromptFileInput(description, "application/zip")
