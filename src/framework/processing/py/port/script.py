@@ -30,17 +30,17 @@ def parse_json_to_dataframe(parsed_dict):
             continue
 
         segment = obj["activitySegment"]
-        activity_type = segment["activityType"]
-
-        if activity_type not in {"WALKING", "CYCLING", "RUNNING"}:
-            continue
-
         start_timestamp_str = segment["duration"]["startTimestamp"]
         start_timestamp = datetime.fromisoformat(
             start_timestamp_str[:-1]
         )  # remove the 'Z'
 
         if start_timestamp < filter_start_date:
+            continue
+
+        activity_type = segment["activityType"]
+
+        if activity_type not in {"WALKING", "CYCLING", "RUNNING"}:
             continue
 
         if meters := get_in(segment, "waypointPath", "distanceMeters"):
@@ -74,6 +74,8 @@ def aggregate_distance_by_day_activity(df):
 
 
 def extract(df):
+    if df.empty:
+        return []
     aggregated_df = aggregate_distance_by_day_activity(df)
     aggregated_df["Afstand in m"] = aggregated_df["distanceMeters"].apply(np.ceil)
 
@@ -146,17 +148,20 @@ def process(sessionId):
 
     # STEP 2: ask for consent
     meta_data.append(("debug", f"prompt consent"))
-    if isinstance(data, tuple):
+    error_detected = isinstance(data, tuple)
+    if error_detected:
         prompt = prompt_report_consent(os.path.basename(data[1]), meta_data)
     else:
         prompt = prompt_consent(data, meta_data)
     consent_result = yield render_donation_page(prompt)
     if consent_result.__type__ == "PayloadJSON":
         meta_data.append(("debug", f"donate consent data"))
-        yield donate(f"{sessionId}", consent_result.value)
-    if consent_result.__type__ == "PayloadFalse":
-        value = json.dumps('{"status" : "donation declined"}')
-        yield donate(f"{sessionId}", value)
+        donation_data = json.loads(consent_result.value)
+    elif consent_result.__type__ == "PayloadFalse":
+        donation_data = {"status": "donation declined"}
+    if error_detected:
+        donation_data["error"] = "Unable to extract data from package"
+    yield donate(f"{sessionId}", json.dumps(donation_data))
 
 
 def render_donation_page(body):
