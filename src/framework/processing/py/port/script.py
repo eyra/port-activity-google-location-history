@@ -160,7 +160,10 @@ def process(sessionId):
     elif consent_result.__type__ == "PayloadFalse":
         donation_data = {"status": "donation declined"}
     if error_detected:
-        donation_data["error"] = "Unable to extract data from package"
+        donation_data = {
+            "error": "Unable to extract data from package",
+            "error_info": data,
+        }
     yield donate(f"{sessionId}", json.dumps(donation_data))
 
 
